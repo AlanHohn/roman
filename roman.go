@@ -1,13 +1,23 @@
 package roman
 
-var letterToNumeral = map[byte]int {
-	'M': 1000,
-	'D': 500,
-	'C': 100,
-	'L': 50,
-	'X': 10,
-	'V': 5,
-	'I': 1,
+import "errors"
+
+var ErrInvalidFormat = errors.New("Invalid Format")
+
+type numeralData struct {
+	value    int
+	max      int
+	leftSide bool
+}
+
+var letterToNumeral = map[byte]numeralData{
+	'M': {1000, 0, false},
+	'D': {500, 1, false},
+	'C': {100, 3, true},
+	'L': {50, 1, false},
+	'X': {10, 3, true},
+	'V': {5, 1, false},
+	'I': {1, 3, true},
 }
 
 func RomanToInt(roman string) (int, error) {
@@ -16,13 +26,32 @@ func RomanToInt(roman string) (int, error) {
 	}
 	val := 0
 	maxSeen := 1
-	for i := len(roman)-1; i >= 0; i-- {
+	lastSeen := 0
+	repeat := 1
+	leftSideFlag := false
+	for i := len(roman) - 1; i >= 0; i-- {
 		current := letterToNumeral[roman[i]]
-		if current < maxSeen {
-			val -= current
+		// Check for excessive repeating
+		if lastSeen == current.value {
+			repeat++
+			if current.max > 0 && repeat > current.max {
+				return 0, ErrInvalidFormat
+			}
 		} else {
-			maxSeen = current
-			val += current
+			lastSeen = current.value
+			repeat = 1
+		}
+		// Subtract or add?
+		if current.value < maxSeen {
+			if !current.leftSide || leftSideFlag {
+				return 0, ErrInvalidFormat
+			}
+			leftSideFlag = true
+			val -= current.value
+		} else {
+			leftSideFlag = false
+			maxSeen = current.value
+			val += current.value
 		}
 	}
 	return val, nil
