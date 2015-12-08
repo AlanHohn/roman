@@ -1,5 +1,8 @@
 # Golang Testing Example with Roman Numerals
 
+[![Build Status](https://drone.io/github.com/AlanHohn/roman/status.png)](https://drone.io/github.com/AlanHohn/roman/latest) 
+[![Coverage Status](https://coveralls.io/repos/AlanHohn/roman/badge.svg?branch=master&service=github)](https://coveralls.io/github/AlanHohn/roman?branch=master)
+
 This repository contains an example Golang program used to illustrate
 table-driven tests, automated build, and unit test code coverage.
 
