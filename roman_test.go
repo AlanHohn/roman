@@ -45,6 +45,11 @@ var invalidTests = []string{
 	"CCCC",
 	"DD",
 	"DM",
+	"Z",
+	"ZI",
+	"IZ",
+	"123",
+	"@",
 }
 
 func TestValid(t *testing.T) {
